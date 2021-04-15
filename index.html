@@ -4,7 +4,12 @@
 
     </head>
     <body>
-        <input type="file" id="fileChooser">
+        <h1>.ical Splitter</h1>
+        <p>
+            This tool splits .ics files for you, to allow for easy importing in Google Calendar which imposes an events limit.
+            Nothing is uploaded to the server, so nothing happens to your data (and downloads are instantaneous!).
+        </p>
+        <input type="file" id="fileChooser" accept=".ics">
         <button id="splitBtn">Split</button>
         <script>
             let fileChooser = document.getElementById("fileChooser");
@@ -71,16 +76,21 @@
                 let reader = new FileReader();
             
                 reader.readAsText(blobFile);
-              
-                reader.onload = function() {
-                  let ics = reader.result;
-                  let portions = splitICS(ics, 1000);
-                  let originalName = blobFile.name.substring(0, blobFile.name.length - 4);
-            
-                  for(let i = 0; i < portions.length; i++){
-                    download(originalName + "_" + (i + 1) + ".ics", portions[i]);
-                  }
-                };
+                try {
+                    reader.onload = function() {
+                    let ics = reader.result;
+                    let portions = splitICS(ics, 1000);
+                    let originalName = blobFile.name.substring(0, blobFile.name.length - 4);
+                
+                    for(let i = 0; i < portions.length; i++){
+                        download(originalName + "_" + (i + 1) + ".ics", portions[i]);
+                    }
+                    };
+                }
+                catch(e) {
+                    document.write("Error: " + e);
+                }
+                
             }
     </script>
     </body>
